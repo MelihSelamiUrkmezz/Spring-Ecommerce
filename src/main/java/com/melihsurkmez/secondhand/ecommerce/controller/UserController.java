@@ -41,8 +41,14 @@ public class UserController {
     }
 
     @PatchMapping("/{email}")
-    public ResponseEntity<User> deactiveUser(@PathVariable String email){
+    public ResponseEntity<Void> deactiveUser(@PathVariable String email){
         userService.deactiveUser(email);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{email}/activate")
+    public ResponseEntity<Void> activateUser(@PathVariable String email){
+        userService.activateUser(email);
         return ResponseEntity.ok().build();
     }
 

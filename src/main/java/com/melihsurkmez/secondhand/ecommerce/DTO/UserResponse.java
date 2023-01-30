@@ -15,5 +15,8 @@ public class UserResponse {
     @NonNull
     String mail;
 
+    @NonNull
+    Boolean isActive;
+
 
 }

@@ -3,7 +3,7 @@ package com.melihsurkmez.secondhand.ecommerce.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Data
+@Getter
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -22,5 +22,7 @@ public class User {
     @Column(unique = true)
     @NonNull
     String mail;
+    @NonNull
+    Boolean isActive;
    }
 

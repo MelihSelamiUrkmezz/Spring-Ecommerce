@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class UserResponseConverter {
 
     public UserResponse convert(User from){
-        return new UserResponse(from.getFirstName(), from.getMiddleName(),from.getLastName(),from.getMail());
+        return new UserResponse(from.getFirstName(), from.getMiddleName(),from.getLastName(),from.getMail(),from.getIsActive());
     }
 
 

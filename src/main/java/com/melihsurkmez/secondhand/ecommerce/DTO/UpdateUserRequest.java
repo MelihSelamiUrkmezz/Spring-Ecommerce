@@ -1,5 +1,6 @@
 package com.melihsurkmez.secondhand.ecommerce.DTO;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
