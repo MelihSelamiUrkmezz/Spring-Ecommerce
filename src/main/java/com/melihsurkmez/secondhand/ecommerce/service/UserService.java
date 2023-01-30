@@ -7,6 +7,7 @@ import com.melihsurkmez.secondhand.ecommerce.DTO.UserResponseConverter;
 import com.melihsurkmez.secondhand.ecommerce.exception.UserNotFound;
 import com.melihsurkmez.secondhand.ecommerce.model.User;
 import com.melihsurkmez.secondhand.ecommerce.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public class UserService {
 
     public UserResponse createUser(CreateUserRequest newUser) {
 
-        User user= new User(newUser.getFirstName(),newUser.getMiddleName(),newUser.getLastName(),newUser.getEmail());
+        User user= new User(newUser.getFirstName(),newUser.getMiddleName(),newUser.getLastName(),newUser.getEmail(),Boolean.TRUE);
 
         return userResponseConverter.convert(userRepository.save(user));
 
@@ -46,22 +47,38 @@ public class UserService {
 
     public UserResponse updateUser(String email,UpdateUserRequest updatedUser) {
 
-        User user = findUserByEmail(email);
-        User updatedNewUser=new User(user.getId(),updatedUser.getFirstName(),updatedUser.getMiddleName(),updatedUser.getLastName(),email);
-        return userResponseConverter.convert(userRepository.save(updatedNewUser));
+            User user = findUserByEmail(email);
+            if(user.getIsActive()){
+                User newUser = new User(user.getId(),updatedUser.getFirstName(),updatedUser.getMiddleName(),updatedUser.getLastName(),email,user.getIsActive());
+                return userResponseConverter.convert(userRepository.save(newUser));
+            }
+
+        throw new UserNotFound("User is not active!");
+
     }
 
     public void deactiveUser(String email) {
+        User user = findUserByEmail(email);
+        changeActivateUser(user.getId(),Boolean.FALSE);
     }
 
     public void deleteUserbyEmail(String email) {
 
         User user= findUserByEmail(email);
-
         userRepository.deleteById(user.getId());
 
     }
     public List<UserResponse> getAllUsers() {
         return userRepository.findAll().stream().map(userResponseConverter::convert).collect(Collectors.toList());}
+
+    public void activateUser(String email) {
+        User user = findUserByEmail(email);
+        changeActivateUser(user.getId(),Boolean.TRUE);
+    }
+    private void changeActivateUser(Long id, Boolean isActive){
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFound("User with id "+id+" not found!"));
+        User newUser=new User(user.getId(),user.getFirstName(),user.getMiddleName(),user.getLastName(),user.getMail(),isActive);
+        userRepository.save(newUser);
+    }
 
 }
